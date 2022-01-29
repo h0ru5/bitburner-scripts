@@ -5,7 +5,7 @@ export async function main(ns) {
   const targetScript = ns.args.shift();
   const targetArgs = ns.args;
   const runSize = ns.getScriptRam(targetScript);
-  // how to get local hostname or local ram
+  // TODO how to get local hostname or local ram?
   const srvRam = ns.getServerMaxRam("home");
 
   const threads = Math.floor(srvRam / runSize);
