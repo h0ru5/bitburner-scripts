@@ -42,3 +42,23 @@ export const run_max = (ns, targetScript, srv) => {
     ns.exec(targetScript, srv, threads, ...targetArgs);
   }
 };
+
+export const percentage = (part, total) => Math.round((part / total) * 100);
+
+/** @param {NS} ns **/
+export const srv_info = (ns, target) => {
+  const maxMoney = ns.getServerMaxMoney(target);
+  const maxSec = ns.getServerMinSecurityLevel(target);
+  const currSec = ns.getServerSecurityLevel(target);
+  const currMoney = ns.getServerMoneyAvailable(target);
+
+  return {
+    name: target,
+    money_max: maxMoney,
+    money_curr: currMoney,
+    money_pct: percentage(currMoney, maxMoney),
+    sec_max: maxSec,
+    sec_curr: currSec,
+    sec_pct: percentage(currSec, maxSec),
+  };
+};
