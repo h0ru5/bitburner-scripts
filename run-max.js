@@ -9,10 +9,12 @@ export async function main(ns) {
   const srvRam = ns.getServerMaxRam(srv);
 
   const threads = Math.floor(srvRam / runSize);
-  ns.tprint(
-    `  starting ${targetScript} on ${srv} with -t ${threads} and args ${targetArgs}`
-  );
-  await ns.exec(targetScript, srv, threads, ...targetArgs);
+  if (threads > 0) {
+    ns.tprint(
+      `  starting ${targetScript} on ${srv} with -t ${threads} and args ${targetArgs}`
+    );
+    await ns.exec(targetScript, srv, threads, ...targetArgs);
+  }
 }
 
 export function autocomplete(data, args) {

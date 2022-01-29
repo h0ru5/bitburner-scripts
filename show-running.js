@@ -1,23 +1,10 @@
+import { scan } from "hacker-lib.js";
+
 /** @param {NS} ns **/
 export async function main(ns) {
-  const psrvs = ns.getPurchasedServers();
-  const maxSrvs = ns.getPurchasedServerLimit();
-  ns.tprintf(`got ${psrvs.length} p-servers, max ${maxSrvs}`);
-
-  let net = ns.scan("home").filter((srv) => !psrvs.includes(srv));
-  // add level 2
-  net.forEach((srv) => {
-    net.push(
-      ...ns
-        .scan(srv)
-        .filter((nsrv) => !net.includes(nsrv) && !psrvs.includes(srv))
-    );
-  });
-
-  const pwnd = net.filter((srv) => ns.hasRootAccess(srv));
-  ns.tprintf(`got ${pwnd.length} pwnd-servers, out of ${net.length}`);
-
-  const srvs = [...pwnd, ...psrvs];
+  const net = scan(ns);
+  const srvs = net.filter((srv) => ns.hasRootAccess(srv));
+  ns.tprintf(`got ${srvs.length} pwnd-servers, out of ${net.length}`);
 
   for (let srv of srvs) {
     const srvRam = ns.getServerMaxRam(srv);
