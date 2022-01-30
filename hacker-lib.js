@@ -2,26 +2,26 @@
  * Utility function for recursive netowrk scan
  * @param {NS} ns
  * **/
-export const rec_scan = (ns, srv, net) => {
+export function rec_scan(ns, srv, net) {
   const nodes = ns.scan(srv).filter((srv) => !net.includes(srv));
   ns.print(`subnet of ${srv} has ${nodes}`);
   net.push(srv);
   nodes.forEach((node) => {
     rec_scan(ns, node, net);
   });
-};
+}
 
 /**
  * Scan the reachable network
  *
  * @param {NS} ns
  * **/
-export const scan = (ns) => {
+export function scan(ns) {
   let net = [];
   rec_scan(ns, "home", net);
   ns.tprintf(`found ${net.length} servers`);
   return net;
-};
+}
 
 /**
  * Run a script with maximum threads on target host
@@ -30,7 +30,7 @@ export const scan = (ns) => {
  * @param {string} targetScript script to run
  * @param {string} srv host to run on
  **/
-export const run_max = (ns, targetScript, srv) => {
+export function run_max(ns, targetScript, srv) {
   const runSize = ns.getScriptRam(targetScript);
   const srvRam = ns.getServerMaxRam(srv);
 
@@ -41,14 +41,14 @@ export const run_max = (ns, targetScript, srv) => {
     );
     ns.exec(targetScript, srv, threads, ...targetArgs);
   }
-};
+}
 
 export const percentage = (part, total) => Math.round((part / total) * 100);
 
 /** @param {NS} ns **/
-export const srv_info = (ns, target) => {
+export function srv_info(ns, target) {
   const maxMoney = ns.getServerMaxMoney(target);
-  const maxSec = ns.getServerMinSecurityLevel(target);
+  const minSec = ns.getServerMinSecurityLevel(target);
   const currSec = ns.getServerSecurityLevel(target);
   const currMoney = ns.getServerMoneyAvailable(target);
 
@@ -57,8 +57,46 @@ export const srv_info = (ns, target) => {
     money_max: maxMoney,
     money_curr: currMoney,
     money_pct: percentage(currMoney, maxMoney),
-    sec_max: maxSec,
+    sec_min: minSec,
+    sec_curr: currSec,
+    sec_pct: percentage(currSec, minSec),
+  };
+}
+
+/** @param {NS} ns **/
+export function srv_money(ns, target) {
+  const maxMoney = ns.getServerMaxMoney(target);
+  const currMoney = ns.getServerMoneyAvailable(target);
+
+  return {
+    name: target,
+    money_max: maxMoney,
+    money_curr: currMoney,
+    money_pct: percentage(currMoney, maxMoney),
+  };
+}
+
+/** @param {NS} ns **/
+export function srv_sec(ns, target) {
+  const maxSec = ns.getServerMinSecurityLevel(target);
+  const currSec = ns.getServerSecurityLevel(target);
+
+  return {
+    name: target,
+    sec_min: maxSec,
     sec_curr: currSec,
     sec_pct: percentage(currSec, maxSec),
   };
-};
+}
+
+/** @param {NS} ns **/
+export function top_money(ns, count) {
+  const infos = scan(ns)
+    .filter((srv) => ns.hasRootAccess(srv))
+    .map((srv) => ({ name: srv, money_max: ns.getServerMaxMoney(srv) }));
+
+  const output = infos
+    .filter((info) => info.money_max != 0)
+    .sort((a, b) => a.money_max - b.money_max)
+    .slice(-5); //top 5
+}

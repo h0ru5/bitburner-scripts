@@ -3,7 +3,7 @@ export async function main(ns) {
   let target = ns.args[0];
   ns.tprint("farming target " + target);
   const moneyThresh = ns.getServerMaxMoney(target);
-  const securityThresh = ns.getServerMinSecurityLevel(target);
+  const securityThresh = ns.getServerMinSecurityLevel(target) + 2;
   while (true) {
     if (ns.getServerSecurityLevel(target) > securityThresh) {
       await ns.weaken(target);
