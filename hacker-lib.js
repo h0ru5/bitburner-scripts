@@ -19,7 +19,7 @@ export function rec_scan(ns, srv, net) {
 export function scan(ns) {
   let net = [];
   rec_scan(ns, "home", net);
-  ns.tprintf(`found ${net.length} servers`);
+  ns.print(`found ${net.length} servers`);
   return net;
 }
 
@@ -44,6 +44,9 @@ export function run_max(ns, targetScript, srv) {
 }
 
 export const percentage = (part, total) => Math.round((part / total) * 100);
+
+//todo style as k,m,b
+export const fmt = (number) => Number.parseFloat(number).toExponential(3);
 
 /** @param {NS} ns **/
 export function srv_info(ns, target) {
@@ -98,5 +101,5 @@ export function top_money(ns, count) {
   const output = infos
     .filter((info) => info.money_max != 0)
     .sort((a, b) => a.money_max - b.money_max)
-    .slice(-5); //top 5
+    .slice(-count); //top 5
 }

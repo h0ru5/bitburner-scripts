@@ -14,8 +14,8 @@ export async function main(ns) {
       .sort(
         (a, b) => ns.getServerMaxMoney(a.name) - ns.getServerMaxMoney(b.name)
       )
-      .slice(-5) //top 5
       .filter((info) => info.sec_curr > info.sec_min + 1);
+    //.slice(-5) //top 5
 
     ns.tprint(
       `top targets: ${output

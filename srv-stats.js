@@ -1,4 +1,4 @@
-import { scan, srv_info } from "hacker-lib.js";
+import { scan, srv_info, fmt } from "hacker-lib.js";
 
 /** @param {NS} ns **/
 export async function main(ns) {
@@ -13,7 +13,9 @@ export async function main(ns) {
   output.forEach((info) => {
     ns.tprint(`Target ${info.name}:`);
     ns.tprint(
-      `  money: ${info.money_curr}/${info.money_max} ${info.money_pct}%`
+      `  money: ${fmt(info.money_curr)}/${fmt(info.money_max)} ${
+        info.money_pct
+      }%`
     );
     ns.tprint(`  sec  : ${info.sec_curr}/${info.sec_min} ${info.sec_pct}%`);
   });

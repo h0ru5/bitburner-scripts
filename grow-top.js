@@ -1,4 +1,4 @@
-import { scan, srv_money } from "hacker-lib.js";
+import { scan, srv_money, percentage } from "hacker-lib.js";
 
 /** @param {NS} ns **/
 export async function main(ns) {
@@ -17,7 +17,7 @@ export async function main(ns) {
       `top targets: ${output
         .map(
           (info) =>
-            `${info.name} ${info.money_max.toExponential(2)}$ ${
+            `${info.name} ${info.money_max.toExponential(3)}$ ${
               info.money_pct
             }%`
         )
@@ -28,12 +28,16 @@ export async function main(ns) {
       const info = output[output.length - 1];
       ns.tprint(`Target ${info.name}:`);
       ns.tprint(
-        `  before money: ${info.money_curr}/${info.money_max} ${info.money_pct}%`
+        `  before money: ${info.money_curr.toExponential(
+          3
+        )}/${info.money_max.toExponential(3)} ${info.money_pct}%`
       );
       await ns.grow(info.name);
       const after = srv_money(ns, info.name);
       ns.tprint(
-        `  after money: ${after.money_curr}/${after.money_max} ${
+        `  after money: ${after.money_curr.toExponential(
+          3
+        )}/${after.money_max.toExponential(3)} ${
           after.money_pct
         }% (raised ${percentage(info.money_curr, after.money_curr)}%)`
       );

@@ -2,6 +2,7 @@ import { scan, srv_sec, percentage } from "hacker-lib.js";
 
 /** @param {NS} ns **/
 export async function main(ns) {
+  let haveTarget = false;
   while (true) {
     const infos = scan(ns)
       .filter((srv) => ns.hasRootAccess(srv))
@@ -19,13 +20,14 @@ export async function main(ns) {
       .sort((a, b) => ns.money_curr - ns.money_curr);
     //.slice(-5); //top 5
 
-    ns.tprint(
+    ns.print(
       `top targets: ${output
         .map((info) => `${info.name} ${info.sec_curr}/${info.sec_min}`)
         .join(", ")}`
     );
 
     if (output.length > 0) {
+      haveTarget = true;
       const info = output[output.length - 1];
       ns.tprint(`Target ${info.name}:`);
       const preMoney = ns.getServerMoneyAvailable(info.name).toExponential(3);
@@ -42,6 +44,9 @@ export async function main(ns) {
           preMoney
         )}`
       );
+    } else if (haveTarget) {
+      ns.tprint("no more tagets available");
+      haveTarget = false;
     }
     await ns.sleep(100);
   }
