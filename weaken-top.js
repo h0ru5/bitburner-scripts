@@ -27,7 +27,9 @@ export async function main(ns) {
         `  after sec: ${post.sec_curr}/${post.sec_min} ${post.sec_pct}%`
       );
       ns.tprint(
-        `weakened ${info.name}: ${info.sec_curr} -> ${post.sec_curr}/${post.sec_min}, now at ${post.sec_pct}%`
+        `weakened ${info.name}: ${info.sec_curr} -> ${post.sec_curr.toFixed(
+          2
+        )}/${post.sec_min}, now at ${post.sec_pct}%`
       );
     }
     await ns.sleep(100);
