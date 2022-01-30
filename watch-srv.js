@@ -1,4 +1,4 @@
-import { srv_info } from "hacker-lib.js";
+import { srv_info } from "./hacker-lib.js";
 
 /** @param {NS} ns **/
 export async function main(ns) {

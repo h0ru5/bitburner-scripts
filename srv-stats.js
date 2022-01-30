@@ -1,4 +1,4 @@
-import { scan, srv_info, fmt } from "hacker-lib.js";
+import { scan, srv_info, fmt } from "./hacker-lib.js";
 
 /** @param {NS} ns **/
 export async function main(ns) {

@@ -1,4 +1,4 @@
-import { scan } from "hacker-lib.js";
+import { scan } from "./hacker-lib.js";
 
 /** @param {NS} ns **/
 export async function main(ns) {
@@ -30,6 +30,7 @@ export async function main(ns) {
           processes[i].args
       );
     }
+    await ns.scp("hacker-lib.js", srv);
     await ns.scp(targetScript, srv);
     await ns.killall(srv);
     const threads = Math.floor(srvRam / runSize);

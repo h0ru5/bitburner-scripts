@@ -1,4 +1,4 @@
-import { scan } from "hacker-lib.js";
+import { scan } from "./hacker-lib.js";
 
 /**
  *

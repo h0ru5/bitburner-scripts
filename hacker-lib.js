@@ -46,7 +46,16 @@ export function run_max(ns, targetScript, srv) {
 export const percentage = (part, total) => Math.round((part / total) * 100);
 
 //todo style as k,m,b
-export const fmt = (number) => Number.parseFloat(number).toExponential(3);
+export const fmt = (number) => {
+  if (number < 1e3) return Number.parseFloat(number).toFixed(3);
+  if (number > 1e3 && number < 1e6)
+    return Number.parseFloat(number / 1e3).toFixed(3) + "k";
+  if (number > 1e6 && number < 1e9)
+    return Number.parseFloat(number / 1e6).toFixed(3) + "m";
+  if (number > 1e9 && number < 1e12)
+    return Number.parseFloat(number / 1e9).toFixed(3) + "b";
+  if (number > 1e12) return Number.parseFloat(number / 1e12).toFixed(3) + "t";
+};
 
 /** @param {NS} ns **/
 export function srv_info(ns, target) {
@@ -102,4 +111,20 @@ export function top_money(ns, count) {
     .filter((info) => info.money_max != 0)
     .sort((a, b) => a.money_max - b.money_max)
     .slice(-count); //top 5
+}
+
+/** @param {NS} ns **/
+export function sorted_targets(ns) {
+  const infos = scan(ns)
+    .filter((srv) => ns.hasRootAccess(srv))
+    .map((srv) => ({
+      name: srv,
+      money_max: ns.getServerMaxMoney(srv),
+      sec_min: ns.getServerMinSecurityLevel(srv),
+    }))
+    .map((srv) => ({ ...srv, score: srv.money_max / srv.sec_min }));
+
+  return infos
+    .filter((info) => info.money_max != 0)
+    .sort((a, b) => b.score - a.score);
 }
