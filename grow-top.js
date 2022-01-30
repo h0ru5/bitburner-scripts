@@ -26,7 +26,7 @@ export async function main(ns) {
           info.money_pct
         }%`
       );
-      await ns.grow(info.name);
+      const amount = await ns.grow(info.name);
       const after = srv_money(ns, info.name);
       ns.print(
         `  after money: ${fmt(after.money_curr)}/${fmt(after.money_max)} ${
@@ -37,8 +37,8 @@ export async function main(ns) {
         `growing ${info.name}: ${fmt(info.money_curr)}$ -> ${fmt(
           after.money_curr
         )}$ / ${fmt(info.money_max)}$  ${after.money_pct}% (+ ${percentage(
-          info.money_curr,
-          after.money_curr
+          amount,
+          info.money_curr
         )}%)`
       );
     } else if (haveTarget) {

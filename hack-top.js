@@ -53,19 +53,16 @@ export async function main(ns) {
           info.sec_pct
         }%, money: ${fmt(preMoney)}`
       );
-      await ns.hack(info.name);
+      const loot = await ns.hack(info.name);
       const postMoney = ns.getServerMoneyAvailable(info.name);
       ns.print(
         `  after hack sec:  ${info.sec_curr}/${info.sec_min} ${
           info.sec_pct
-        }%, money: ${fmt(postMoney)}, got ${percentage(
-          preMoney - postMoney,
-          preMoney
-        )}%`
+        }%, money: ${fmt(postMoney)}, got ${percentage(loot, preMoney)}%`
       );
       ns.tprint(
-        `Hacked ${info.name}: got ${fmt(preMoney - postMoney)} (${percentage(
-          preMoney - postMoney,
+        `Hacked ${info.name}: got ${fmt(loot)} (${percentage(
+          loot,
           preMoney
         )}%), now at sec ${info.sec_curr.toFixed(2)}/${info.sec_min} (${
           info.sec_pct
