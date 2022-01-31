@@ -13,7 +13,7 @@ export async function main(ns) {
   const sizeWeaken = ns.getScriptRam(scriptWeaken);
   const sizeGrow = ns.getScriptRam(scriptGrow);
   const sizeHack = ns.getScriptRam(scriptHack);
-  const partGrow = (ns.args[0] || 70) / 100;
+  const partGrow = (ns.args[0] || 50) / 100;
   const partWeaken = 1.0 - partGrow;
 
   const hackFactor = 0.1;
