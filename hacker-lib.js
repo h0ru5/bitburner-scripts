@@ -23,6 +23,25 @@ export function scan(ns) {
   return net;
 }
 
+export function rec_search(ns, srv, tgt, path) {
+  const nodes = ns.scan(srv).filter((srv) => !path.includes(srv));
+  path.push(srv);
+  nodes.forEach((node) => {
+    if (node == tgt) {
+      path.push(node);
+      ns.tprintf(`found ${tgt}, route: ${path.join(" -> ")}`);
+    } else {
+      let mpath = [...path];
+      rec_search(ns, node, tgt, mpath);
+    }
+  });
+}
+
+export function search(ns, tgt) {
+  let path = [];
+  rec_search(ns, "home", tgt, path);
+}
+
 /**
  * Run a script with maximum threads on target host
  *

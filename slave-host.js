@@ -6,17 +6,17 @@ const scriptHack = "hack-top.js";
 
 /** @param {NS} ns **/
 export async function main(ns) {
+  const srv = ns.args[0];
+
   const sizeWeaken = ns.getScriptRam(scriptWeaken);
   const sizeGrow = ns.getScriptRam(scriptGrow);
   const sizeHack = ns.getScriptRam(scriptHack);
-  const partGrow = (ns.args[0] || 40) / 100;
+  const partGrow = (ns.args[1] || 40) / 100;
   const partWeaken = 1.0 - partGrow;
 
   const hackFactor = 0.1;
 
-  const srv = "home";
-
-  const srvRam = ns.getServerMaxRam(srv) * 0.99;
+  const srvRam = ns.getServerMaxRam(srv);
 
   const countWeaken = Math.floor(
     (srvRam * (1.0 - hackFactor) * partWeaken) / sizeWeaken
@@ -30,7 +30,17 @@ export async function main(ns) {
     `server ${srv} (${srvRam} GB): ${countWeaken} weaken / ${countGrow} grow / ${countHack} hack threads`
   );
 
-  if (countWeaken > 0) ns.run(scriptWeaken, countWeaken);
-  if (countGrow > 0) ns.run(scriptGrow, countGrow);
-  if (countHack > 0) ns.run(scriptHack, countHack);
+  await ns.scp("hacker-lib.js", srv);
+  await ns.scp(scriptWeaken, srv);
+  await ns.scp(scriptGrow, srv);
+  await ns.scp(scriptHack, srv);
+  ns.killall(srv);
+
+  if (countWeaken > 0) ns.exec(scriptWeaken, srv, countWeaken);
+  if (countGrow > 0) ns.exec(scriptGrow, srv, countGrow);
+  if (countHack > 0) ns.exec(scriptHack, srv, countHack);
+}
+
+export function autocomplete(data, args) {
+  return [...data.servers];
 }

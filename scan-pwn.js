@@ -39,6 +39,9 @@ export async function main(ns) {
       if (needPorts >= 5) ns.sqlinject(srv);
       ns.nuke(srv);
       ns.tprintf(`p0wnd ${srv}`);
+      if (ns.fileExists("slave-host.js", "home")) {
+        ns.run("slave-host.js", 1, srv);
+      }
     }
   });
 }
