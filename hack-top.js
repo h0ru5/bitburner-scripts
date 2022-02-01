@@ -8,6 +8,9 @@ import {
 
 /** @param {import('./NS').NS} ns **/
 export async function main(ns) {
+  //random backoff
+  await ns.sleep(Math.floor(Math.random() * 10000));
+
   let haveTarget = false;
   while (true) {
     const infos = sorted_targets(ns)

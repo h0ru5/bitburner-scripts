@@ -2,6 +2,9 @@ import { sorted_targets, srv_money, percentage, fmt } from "./hacker-lib.js";
 
 /** @param {import('./NS').NS} ns **/
 export async function main(ns) {
+  //random backoff
+  await ns.sleep(Math.floor(Math.random() * 10000));
+
   while (true) {
     const output = sorted_targets(ns)
       .map((srv) => ({

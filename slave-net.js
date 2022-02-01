@@ -19,6 +19,6 @@ export async function main(ns) {
     }
 
     // break out of lockstep
-    await ns.sleep(9999);
+    //    await ns.sleep(9999);
   }
 }
