@@ -1,6 +1,6 @@
 /**
  * Utility function for recursive netowrk scan
- * @param {NS} ns
+ * @param {import('./NS').NS} ns
  * **/
 export function rec_scan(ns, srv, net) {
   const nodes = ns.scan(srv).filter((srv) => !net.includes(srv));
@@ -14,7 +14,7 @@ export function rec_scan(ns, srv, net) {
 /**
  * Scan the reachable network
  *
- * @param {NS} ns
+ * @param {import('./NS').NS} ns
  * **/
 export function scan(ns) {
   let net = [];
@@ -45,7 +45,7 @@ export function search(ns, tgt) {
 /**
  * Run a script with maximum threads on target host
  *
- * @param {NS} ns
+ * @param {import('./NS').NS} ns
  * @param {string} targetScript script to run
  * @param {string} srv host to run on
  **/
@@ -76,7 +76,7 @@ export const fmt = (number) => {
   if (number > 1e12) return Number.parseFloat(number / 1e12).toFixed(3) + "t";
 };
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export function srv_info(ns, target) {
   const maxMoney = ns.getServerMaxMoney(target);
   const minSec = ns.getServerMinSecurityLevel(target);
@@ -94,7 +94,7 @@ export function srv_info(ns, target) {
   };
 }
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export function srv_money(ns, target) {
   const maxMoney = ns.getServerMaxMoney(target);
   const currMoney = ns.getServerMoneyAvailable(target);
@@ -107,7 +107,7 @@ export function srv_money(ns, target) {
   };
 }
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export function srv_sec(ns, target) {
   const maxSec = ns.getServerMinSecurityLevel(target);
   const currSec = ns.getServerSecurityLevel(target);
@@ -120,7 +120,7 @@ export function srv_sec(ns, target) {
   };
 }
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export function top_money(ns, count) {
   const infos = scan(ns)
     .filter((srv) => ns.hasRootAccess(srv))
@@ -132,7 +132,10 @@ export function top_money(ns, count) {
     .slice(-count); //top 5
 }
 
-/** @param {NS} ns **/
+/**
+ *
+ * @param {import('./NS').NS} ns
+ **/
 export function sorted_targets(ns) {
   const infos = scan(ns)
     .filter((srv) => ns.hasRootAccess(srv))
@@ -140,10 +143,11 @@ export function sorted_targets(ns) {
       name: srv,
       money_max: ns.getServerMaxMoney(srv),
       sec_min: ns.getServerMinSecurityLevel(srv),
+      growth: ns.getServerGrowth(srv),
     }))
     .map((srv) => ({ ...srv, score: srv.money_max / srv.sec_min }));
 
   return infos
     .filter((info) => info.money_max != 0)
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => b.growth - a.growth);
 }

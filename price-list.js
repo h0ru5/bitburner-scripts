@@ -1,6 +1,6 @@
 import { fmt } from "./hacker-lib.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const myRiches = ns.getServerMoneyAvailable("home");
   const maxSrvs = ns.getPurchasedServerLimit();

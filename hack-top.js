@@ -6,15 +6,17 @@ import {
   srv_money,
 } from "./hacker-lib.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   let haveTarget = false;
   while (true) {
-    const infos = sorted_targets(ns).map((srv) => ({
-      ...srv,
-      ...srv_sec(ns, srv.name),
-      ...srv_money(ns, srv.name),
-    }));
+    const infos = sorted_targets(ns)
+      .map((srv) => ({
+        ...srv,
+        ...srv_sec(ns, srv.name),
+        ...srv_money(ns, srv.name),
+      }))
+      .filter((info) => info.name !== "n00dles");
 
     //ns.tprint(`info: ${infos.map((info) => info.name).join(", ")}`);
 

@@ -1,4 +1,4 @@
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const targetRam = ns.args.shift();
   const targetScript = ns.args.shift();

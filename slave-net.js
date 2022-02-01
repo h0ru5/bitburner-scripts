@@ -4,7 +4,7 @@ const scriptWeaken = "weaken-top.js";
 const scriptGrow = "grow-top.js";
 const scriptHack = "hack-top.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const net = scan(ns);
   const srvs = net.filter((srv) => ns.hasRootAccess(srv));

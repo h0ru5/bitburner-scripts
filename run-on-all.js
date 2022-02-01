@@ -1,6 +1,6 @@
 import { scan } from "./hacker-lib.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const targetScript = ns.args.shift();
   const targetArgs = ns.args;

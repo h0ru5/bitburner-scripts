@@ -1,6 +1,6 @@
 import { sorted_targets, srv_sec } from "./hacker-lib.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   while (true) {
     const output = sorted_targets(ns)
@@ -8,6 +8,7 @@ export async function main(ns) {
         ...srv,
         ...srv_sec(ns, srv.name),
       }))
+      .filter((info) => info.name !== "n00dles")
       .filter((info) => info.sec_curr > info.sec_min + 1);
 
     ns.print(

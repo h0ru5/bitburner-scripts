@@ -4,7 +4,7 @@ const scriptWeaken = "weaken-top.js";
 const scriptGrow = "grow-top.js";
 const scriptHack = "hack-top.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const sizeWeaken = ns.getScriptRam(scriptWeaken);
   const sizeGrow = ns.getScriptRam(scriptGrow);

@@ -1,4 +1,4 @@
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   let target = ns.args[0];
   ns.tprint("farming target " + target);

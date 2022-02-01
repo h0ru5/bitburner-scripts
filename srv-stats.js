@@ -1,6 +1,6 @@
 import { scan, srv_info, fmt } from "./hacker-lib.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const infos = scan(ns)
     .filter((srv) => ns.hasRootAccess(srv))

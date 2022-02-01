@@ -2,7 +2,7 @@ import { scan } from "./hacker-lib.js";
 
 /**
  *
- * @param {NS} ns
+ * @param {import('./NS').NS} ns
  **/
 export async function main(ns) {
   const srv = ns.args.shift();

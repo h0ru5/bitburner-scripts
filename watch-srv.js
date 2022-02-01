@@ -1,6 +1,6 @@
 import { srv_info } from "./hacker-lib.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   let target = ns.args[0];
   ns.tprint("watching target " + target);

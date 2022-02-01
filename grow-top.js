@@ -1,6 +1,6 @@
 import { sorted_targets, srv_money, percentage, fmt } from "./hacker-lib.js";
 
-/** @param {NS} ns **/
+/** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   while (true) {
     const output = sorted_targets(ns)
@@ -8,7 +8,8 @@ export async function main(ns) {
         ...srv,
         ...srv_money(ns, srv.name),
       }))
-      .filter((info) => info.money_curr < info.money_max);
+      .filter((info) => info.money_curr < info.money_max)
+      .filter((info) => info.name !== "n00dles");
 
     ns.print(
       `top targets: ${output
