@@ -1,4 +1,4 @@
-import { sorted_targets, srv_info, fmt } from "./hacker-lib.js";
+import { sorted_targets, srv_info, fmt, tfmt } from "./hacker-lib.js";
 
 /** @param {import('./NS').NS} ns **/
 export async function main(ns) {
@@ -17,5 +17,10 @@ export async function main(ns) {
     ns.tprint(`  sec  : ${info.sec_curr}/${info.sec_min} ${info.sec_pct}%`);
     ns.tprint(`  score: ${fmt(info.score)}`);
     ns.tprint(`  growth: ${fmt(info.growth)}`);
+    ns.tprint(
+      `  times: grow ${tfmt(ns.getGrowTime(info.name))} weak ${tfmt(
+        ns.getWeakenTime(info.name)
+      )} hack ${tfmt(ns.getHackTime(info.name))} `
+    );
   });
 }

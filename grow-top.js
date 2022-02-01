@@ -35,12 +35,9 @@ export async function main(ns) {
         }% (raised ${percentage(info.money_curr, after.money_curr)}%)`
       );
       ns.tprint(
-        `growing ${info.name}: ${fmt(info.money_curr)}$ -> ${fmt(
-          after.money_curr
-        )}$ / ${fmt(info.money_max)}$  ${after.money_pct}% (+ ${percentage(
-          amount,
-          info.money_curr
-        )}%)`
+        `grown ${info.name} to ${fmt(after.money_curr)}$ / ${fmt(
+          info.money_max
+        )}$  ${after.money_pct}% (+ ${percentage(amount, info.money_curr)}%)`
       );
     } else if (haveTarget) {
       ns.tprint("no more tagets available");

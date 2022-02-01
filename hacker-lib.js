@@ -76,6 +76,17 @@ export const fmt = (number) => {
   if (number > 1e12) return Number.parseFloat(number / 1e12).toFixed(3) + "t";
 };
 
+export function tfmt(msec) {
+  let secs = msec / 1000;
+  let mins = secs > 60 ? Math.floor(secs / 60) : 0;
+  secs = Math.max(Math.floor(secs - mins * 60), 0);
+  let hours = mins > 60 ? mins / 60 : 0;
+  mins = Math.max(Math.floor(mins - hours * 60), 0);
+  return `${hours ? hours + "h " : ""}${mins ? mins + "m " : ""}${
+    secs ? secs + "s" : ""
+  }`;
+}
+
 /** @param {import('./NS').NS} ns **/
 export function srv_info(ns, target) {
   const maxMoney = ns.getServerMaxMoney(target);
