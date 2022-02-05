@@ -6,13 +6,16 @@ export async function main(ns) {
   await ns.sleep(Math.floor(Math.random() * 10000));
 
   while (true) {
+    //random backoff
+    await ns.sleep(Math.floor(Math.random() * 5000));
+
     const output = sorted_targets(ns)
       .map((srv) => ({
         ...srv,
         ...srv_sec(ns, srv.name),
       }))
-      .filter((info) => info.name !== "n00dles")
-      .filter((info) => info.sec_curr > info.sec_min + 1);
+      .filter((info) => info.sec_curr > info.sec_min)
+      .filter((info) => info.name !== "n00dles");
 
     ns.print(
       `top targets: ${output

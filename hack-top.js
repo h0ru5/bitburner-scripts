@@ -13,6 +13,9 @@ export async function main(ns) {
 
   let haveTarget = false;
   while (true) {
+    //random backoff
+    await ns.sleep(Math.floor(Math.random() * 5000));
+
     const infos = sorted_targets(ns)
       .map((srv) => ({
         ...srv,
@@ -25,6 +28,7 @@ export async function main(ns) {
 
     const output_s = infos
       .filter((info) => info.money_curr != 0)
+      .filter((info) => info.money_curr >= 0.25 * info.money_max)
       .filter((info) => info.sec_curr <= info.sec_min + 2); // only with reasonably weak security
 
     ns.print(

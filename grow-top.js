@@ -6,6 +6,9 @@ export async function main(ns) {
   await ns.sleep(Math.floor(Math.random() * 10000));
 
   while (true) {
+    //random backoff
+    await ns.sleep(Math.floor(Math.random() * 5000));
+
     const output = sorted_targets(ns)
       .map((srv) => ({
         ...srv,
