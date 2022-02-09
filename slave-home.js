@@ -4,31 +4,30 @@ import { scan } from "./hacker-lib.js";
 export async function main(ns) {
   const target = ns.args[0];
 
-  const scriptWeaken = !target ? "weaken-top.js" : "loop-weaken.js";
-  const scriptGrow = !target ? "grow-top.js" : "loop-grow.js";
-  const scriptHack = !target ? "hack-top.js" : "loop-hack.js";
+  const scriptWeaken = "loop-weaken.js";
+  const scriptGrow = "loop-grow.js";
+  const scriptHack = "loop-hack.js";
 
   ns.tprint(
     `target ${target}, scripts: ${scriptWeaken},${scriptGrow},${scriptHack}`
   );
 
+  const srv = "home";
   const sizeWeaken = ns.getScriptRam(scriptWeaken);
   const sizeGrow = ns.getScriptRam(scriptGrow);
   const sizeHack = ns.getScriptRam(scriptHack);
-  const partGrow = (ns.args[1] || 45) / 100;
-  const partWeaken = 1.0 - partGrow;
-  const hackFactor = 0.1;
 
-  const srv = "home";
-  const srvRam = ns.getServerMaxRam(srv) * 0.99;
+  const size = sizeWeaken; //all have same size
 
-  const countWeaken = Math.floor(
-    (srvRam * (1.0 - hackFactor) * partWeaken) / sizeWeaken
-  );
-  const countGrow = Math.floor(
-    (srvRam * (1.0 - hackFactor) * partGrow) / sizeGrow
-  );
-  const countHack = Math.floor((srvRam * hackFactor) / sizeHack);
+  const partGrow = 0.45;
+  const partWeaken = 0.45;
+
+  const srvRam = ns.getServerMaxRam(srv);
+  const srvThreads = srvRam / size;
+
+  const countWeaken = srvThreads * partGrow;
+  const countGrow = srvThreads * partWeaken;
+  let countHack = srvThreads - countGrow - countWeaken;
 
   ns.tprint(
     `server ${srv} (${srvRam} GB): ${countWeaken} weaken / ${countGrow} grow / ${countHack} hack threads`

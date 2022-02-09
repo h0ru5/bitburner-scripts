@@ -1,4 +1,10 @@
-import { sorted_targets, srv_info, fmt, tfmt } from "./hacker-lib.js";
+import {
+  sorted_targets,
+  best_target,
+  srv_info,
+  fmt,
+  tfmt,
+} from "./hacker-lib.js";
 
 /** @param {import('./NS').NS} ns **/
 export async function main(ns) {
@@ -23,4 +29,6 @@ export async function main(ns) {
       )} hack ${tfmt(ns.getHackTime(info.name))} `
     );
   });
+
+  ns.tprint(`best target is ${best_target(ns).name}`);
 }

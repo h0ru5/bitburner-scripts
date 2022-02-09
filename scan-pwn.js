@@ -1,4 +1,4 @@
-import { scan } from "./hacker-lib.js";
+import { scan, best_target } from "./hacker-lib.js";
 
 /** @param {import('./NS').NS} ns **/
 export async function main(ns) {
@@ -40,7 +40,7 @@ export async function main(ns) {
       ns.nuke(srv);
       ns.tprintf(`p0wnd ${srv}`);
       if (ns.fileExists("slave-host.js", "home")) {
-        ns.run("slave-host.js", 1, srv);
+        ns.run("slave-host.js", 1, srv, best_target(ns).name);
       }
     }
   });
