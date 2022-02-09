@@ -45,9 +45,8 @@ export async function main(ns) {
           info.money_max
         )}$  ${after.money_pct}% (+ ${percentage(amount, info.money_curr)}%)`
       );
-    } else if (haveTarget) {
-      ns.tprint("no more tagets available");
-      haveTarget = false;
+    } else {
+      ns.print("no more tagets available");
     }
     await ns.sleep(100);
   }

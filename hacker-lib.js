@@ -26,20 +26,23 @@ export function scan(ns) {
 export function rec_search(ns, srv, tgt, path) {
   const nodes = ns.scan(srv).filter((srv) => !path.includes(srv));
   path.push(srv);
-  nodes.forEach((node) => {
+  for (let node of nodes) {
     if (node == tgt) {
       path.push(node);
       ns.tprintf(`found ${tgt}, route: ${path.join(" -> ")}`);
+      return path;
     } else {
       let mpath = [...path];
-      rec_search(ns, node, tgt, mpath);
+      const res = rec_search(ns, node, tgt, mpath);
+      if (res !== null) return res;
     }
-  });
+  }
+  return null;
 }
 
 export function search(ns, tgt) {
   let path = [];
-  rec_search(ns, "home", tgt, path);
+  return rec_search(ns, "home", tgt, path);
 }
 
 /**

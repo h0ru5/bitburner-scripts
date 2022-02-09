@@ -1,17 +1,22 @@
 import { scan } from "./hacker-lib.js";
 
-const scriptWeaken = "weaken-top.js";
-const scriptGrow = "grow-top.js";
-const scriptHack = "hack-top.js";
-
 /** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const srv = ns.args[0];
+  const target = ns.args[1];
+
+  const scriptWeaken = !target ? "weaken-top.js" : "loop-weaken.js";
+  const scriptGrow = !target ? "grow-top.js" : "loop-grow.js";
+  const scriptHack = !target ? "hack-top.js" : "loop-hack.js";
+
+  ns.tprint(
+    `host ${srv}, target ${target}, scripts: ${scriptWeaken},${scriptGrow},${scriptHack}`
+  );
 
   const sizeWeaken = ns.getScriptRam(scriptWeaken);
   const sizeGrow = ns.getScriptRam(scriptGrow);
   const sizeHack = ns.getScriptRam(scriptHack);
-  const partGrow = (ns.args[1] || 40) / 100;
+  const partGrow = (ns.args[2] || 45) / 100;
   const partWeaken = 1.0 - partGrow;
 
   const hackFactor = 0.1;
@@ -36,9 +41,9 @@ export async function main(ns) {
   await ns.scp(scriptHack, srv);
   ns.killall(srv);
 
-  if (countWeaken > 0) ns.exec(scriptWeaken, srv, countWeaken);
-  if (countGrow > 0) ns.exec(scriptGrow, srv, countGrow);
-  if (countHack > 0) ns.exec(scriptHack, srv, countHack);
+  if (countWeaken > 0) ns.exec(scriptWeaken, srv, countWeaken, target);
+  if (countGrow > 0) ns.exec(scriptGrow, srv, countGrow, target);
+  if (countHack > 0) ns.exec(scriptHack, srv, countHack, target);
 }
 
 export function autocomplete(data, args) {

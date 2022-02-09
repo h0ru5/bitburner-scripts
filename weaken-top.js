@@ -14,8 +14,8 @@ export async function main(ns) {
         ...srv,
         ...srv_sec(ns, srv.name),
       }))
-      .filter((info) => info.sec_curr > info.sec_min)
-      .filter((info) => info.name !== "n00dles");
+      .filter((info) => info.sec_curr > info.sec_min + 1);
+    //.filter((info) => info.name !== "n00dles");
 
     ns.print(
       `top targets: ${output

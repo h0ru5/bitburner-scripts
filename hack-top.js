@@ -16,13 +16,12 @@ export async function main(ns) {
     //random backoff
     await ns.sleep(Math.floor(Math.random() * 5000));
 
-    const infos = sorted_targets(ns)
-      .map((srv) => ({
-        ...srv,
-        ...srv_sec(ns, srv.name),
-        ...srv_money(ns, srv.name),
-      }))
-      .filter((info) => info.name !== "n00dles");
+    const infos = sorted_targets(ns).map((srv) => ({
+      ...srv,
+      ...srv_sec(ns, srv.name),
+      ...srv_money(ns, srv.name),
+    }));
+    //      .filter((info) => info.name !== "n00dles");
 
     //ns.tprint(`info: ${infos.map((info) => info.name).join(", ")}`);
 
@@ -69,7 +68,7 @@ export async function main(ns) {
           info.sec_pct
         }%, money: ${fmt(postMoney)}, got ${percentage(loot, preMoney)}%`
       );
-      ns.tprint(
+      ns.print(
         `Hacked ${info.name}: got ${fmt(loot)} (${percentage(
           loot,
           preMoney
@@ -79,7 +78,7 @@ export async function main(ns) {
       );
     } else {
       if (haveTarget) {
-        ns.tprint("no more tagets available");
+        ns.print("no more tagets available");
         haveTarget = false;
       }
     }
