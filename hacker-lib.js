@@ -178,14 +178,30 @@ export function best_target(ns) {
   let target = maxGrowth[0];
 
   if (maxGrowth.length > 1) {
-    const maxGrowth_Money = maxGrowth.sort((a, b) => a.money_max - b.money_max);
+    const maxGrowth_Money = maxGrowth.sort((a, b) => b.money_max - a.money_max);
+    ns.tprintf(
+      `found ${maxGrowth_Money.length} targets with growth ${
+        maxGrowth_Money[0].growth
+      }: ${maxGrowth_Money.map((elm) => elm.name).join(", ")}`
+    );
     const maxGrowth_maxMoney = maxGrowth_Money.filter(
-      (tgt) => tgt.money_max >= maxGrowth_Money[0]
+      (tgt) => tgt.money_max >= maxGrowth_Money[0].money_max
     );
     if (maxGrowth_maxMoney.length > 1) {
       // several with max growth and money
-      target = maxGrowth_maxMoney.sort((a, b) => b.sec_min - a.sec_min)[0];
-    } else target = maxGrowth_maxMoney[0];
+      const max_gm = maxGrowth_maxMoney.sort((a, b) => a.sec_min - b.sec_min);
+      ns.tprintf(
+        `found ${max_gm.length} targets with growth ${
+          max_gm[0].growth
+        } and maxMoney ${max_gm[0].money_max}: ${max_gm
+          .map((elm) => elm.name)
+          .join(", ")}`
+      );
+      target = [0];
+    } else {
+      target = maxGrowth_maxMoney[0];
+    }
   }
+  //ns.tprint(`best target was determined as ${JSON.stringify(target)}`);
   return target;
 }

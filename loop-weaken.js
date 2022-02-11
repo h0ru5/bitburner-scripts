@@ -1,9 +1,11 @@
 /** @param {import('./NS').NS} ns **/
 export async function main(ns) {
   const target = ns.args[0];
-  ns.print("loop weaken target " + target);
+  // await ns.asleep(Math.random() * 60 * 1000);
   while (true) {
-    await ns.weaken(target);
+    ns.print("loop weaken target " + target);
+    const amt = await ns.weaken(target);
+    ns.print("weakened target " + target + " by " + amt);
     await ns.asleep(Math.random() * 10 * 1000);
   }
 }
