@@ -11,11 +11,12 @@ export async function main(ns) {
   const exclude = ["home"];
 
   // excluding home
-  srvs
-    .filter((srv) => !exclude.includes(srv))
-    .forEach((srv) => {
-      if (ns.fileExists("slave-host.js", "home")) {
-        ns.run("slave-host.js", 1, srv, target);
-      }
-    });
+  if (ns.fileExists("slave-host.js", "home")) {
+    const targets = srvs.filter((srv) => !exclude.includes(srv));
+    // ns.tprint("targets: " + targets.join(","));
+    for (let srv of targets) {
+      ns.run("slave-host.js", 1, srv, target);
+      await ns.sleep(20);
+    }
+  }
 }

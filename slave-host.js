@@ -19,18 +19,22 @@ export async function main(ns) {
 
   const size = sizeWeaken; //all have same size
 
-  const partGrow = 0.45;
-  const partWeaken = 0.45;
+  const partGrow = 0.55;
+  const partWeaken = 0.35;
 
   const srvRam = ns.getServerMaxRam(srv);
   const srvThreads = srvRam / size;
 
-  const countWeaken = srvThreads * partGrow;
-  const countGrow = srvThreads * partWeaken;
+  const countWeaken = srvThreads * partWeaken;
+  const countGrow = srvThreads * partGrow;
   let countHack = srvThreads - countGrow - countWeaken;
 
   ns.tprint(
-    `server ${srv} (${srvRam} GB): ${countWeaken} weaken / ${countGrow} grow / ${countHack} hack threads`
+    `server ${srv} (${srvRam} GB): ${Math.floor(
+      countWeaken
+    )} weaken / ${Math.floor(countGrow)} grow / ${Math.floor(
+      countHack
+    )} hack threads`
   );
 
   await ns.scp("hacker-lib.js", srv);
@@ -42,6 +46,7 @@ export async function main(ns) {
   if (countWeaken > 0) ns.exec(scriptWeaken, srv, countWeaken, target);
   if (countGrow > 0) ns.exec(scriptGrow, srv, countGrow, target);
   if (countHack > 0) ns.exec(scriptHack, srv, countHack, target);
+  ns.tprint("done slaving " + srv);
 }
 
 export function autocomplete(data, args) {
