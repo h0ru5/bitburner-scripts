@@ -10,7 +10,7 @@ export async function main(ns) {
     } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
       await ns.grow(target);
     } else {
-      ns.tprint("server " + target + "is full and weak");
+      ns.print("server " + target + "is full and weak");
       await ns.sleep(1000);
     }
   }

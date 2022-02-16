@@ -40,7 +40,7 @@ export async function main(ns) {
       ns.nuke(srv);
       ns.tprintf(`p0wnd ${srv}`);
       if (ns.fileExists("slave-host.js", "home")) {
-        ns.run("slave-host.js", 1, srv, best_target(ns).name);
+        ns.run("slave-host.js", 1, srv, best_target(ns)?.name || "");
       }
     }
   });
