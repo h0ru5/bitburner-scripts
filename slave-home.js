@@ -19,8 +19,8 @@ export async function main(ns) {
 
   const size = sizeWeaken; //all have same size
 
-  const partGrow = 0.55;
-  const partWeaken = 0.35;
+  const partGrow = 0.9;
+  const partWeaken = 0.09;
 
   const srvRam = ns.getServerMaxRam(srv) - ns.getServerUsedRam(srv);
   const srvThreads = srvRam / size;

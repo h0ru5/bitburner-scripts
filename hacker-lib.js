@@ -4,7 +4,7 @@
  * **/
 export function rec_scan(ns, srv, net) {
   const nodes = ns.scan(srv).filter((srv) => !net.includes(srv));
-  ns.print(`subnet of ${srv} has ${nodes}`);
+  // ns.print(`subnet of ${srv} has ${nodes}`);
   net.push(srv);
   nodes.forEach((node) => {
     rec_scan(ns, node, net);
@@ -19,7 +19,7 @@ export function rec_scan(ns, srv, net) {
 export function scan(ns) {
   let net = [];
   rec_scan(ns, "home", net);
-  ns.print(`found ${net.length} servers`);
+  // ns.print(`found ${net.length} servers`);
   return net;
 }
 

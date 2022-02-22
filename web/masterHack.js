@@ -32,7 +32,7 @@ export async function main(ns) {
   var currentServerSecurity;
   var useThreadsHack;
   var possibleThreads;
-  var maxHackFactor = 0.0001;
+  var maxHackFactor = 0.001;
   var growWeakenRatio = 0.9; // How many threads are used for growing vs. weaking (90:10).
   var sleepTime;
   var cores = 1; // I didn't bother with cores for now. Uncomment the line 51 if you want to use this.
@@ -165,14 +165,17 @@ export async function main(ns) {
       ns.tprint(
         `threads for hacking ${useThreadsHack} = min(${useThreadsHack},${possibleThreads})`
       );
-      ns.exec(hackScript, serverToHackFrom, useThreadsHack, target);
+      if (useThreadsHack > 0) {
+        ns.exec(hackScript, serverToHackFrom, useThreadsHack, target);
+      }
       possibleThreads = Math.floor(
         (serverMaxRAM - ns.getServerUsedRam(serverToHackFrom)) / growScriptRAM
       );
       if (possibleThreads >= 2) {
         sleepTime = ns.getWeakenTime(target) + 1000;
         const growThreads = Math.floor(possibleThreads * growWeakenRatio);
-        if (gri) ns.exec(growScript, serverToHackFrom, growThreads, target);
+        if (growThreads)
+          ns.exec(growScript, serverToHackFrom, growThreads, target);
         ns.exec(
           weakenScript,
           serverToHackFrom,
