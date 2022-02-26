@@ -1,7 +1,32 @@
 /** @param {import('../NS').NS} ns **/
 export async function main(ns) {
+  const target = -54000;
+  ns.disableLog("ALL");
+  ns.tail();
   while (true) {
-    ns.commitCrime("Mug someone");
+    ns.clearLog();
+
+    const karma = ns.heart.break();
+    if (karma > target)
+      ns.print(`Current Karma : ${karma}, ${(karma / target).toFixed(2)}%`);
+
+    const crime = "Mug someone";
+
+    const { karma: dkarma, money, time, ...stats } = ns.getCrimeStats(crime);
+    ns.print(`${crime}, chance: ${(ns.getCrimeChance(crime) * 100.0).toFixed(
+      2
+    )}%, 
+Karma: -${dkarma}, dur: ${ns.tFormat(time)}, gain: ${ns.nFormat(
+      money,
+      "$0.000a"
+    )}
+${JSON.stringify(stats, null, 2)}`);
+
+    ns.print(
+      `Homicide chance: ${(ns.getCrimeChance("Homicide") * 100.0).toFixed(2)}%`
+    );
+
+    ns.commitCrime(crime);
     await ns.asleep(5000);
   }
 }
