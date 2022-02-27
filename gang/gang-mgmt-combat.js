@@ -1,4 +1,4 @@
-/** @param {import('./NS').NS} ns **/
+/** @param {import('../NS').NS} ns **/
 export async function main(ns) {
   while (true) {
     const members = ns.gang.getMemberNames();

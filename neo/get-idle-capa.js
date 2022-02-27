@@ -5,13 +5,8 @@ export function idle_threads(ns, size) {
   const srvs = scan(ns).filter((srv) => ns.hasRootAccess(srv));
   const capa = srvs.map((srv) => {
     let freeRam = ns.getServerMaxRam(srv) - ns.getServerUsedRam(srv);
-    if (srv == "home" && ns.getServerUsedRam(srv) < 20) {
-      /* ns.tprintf(
-        `Home: free ${freeRam} max ${ns.getServerMaxRam(
-          srv
-        )} used ${ns.getServerUsedRam(srv)}`
-      ); */
-      freeRam -= 20;
+    if (srv == "home") {
+      freeRam = Math.max(freeRam - 20, 0);
     }
     const idleThreads = Math.floor(freeRam / size);
     return { name: srv, threads: idleThreads, free: freeRam };
