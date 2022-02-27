@@ -27,7 +27,7 @@ export async function main(ns) {
         price: ns.gang.getEquipmentCost(stats.name),
         type: ns.gang.getEquipmentType(stats.name),
       }))
-      .filter((stats) => stats.str > 0 || stats.def > 0);
+      .filter((stats) => stats.str > 0 || stats.def > 0 || stats.agi > 0);
 
     for (let ganger of members.map((name) => ({
       name,

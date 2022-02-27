@@ -2,7 +2,7 @@ import { idle_threads } from "neo/get-idle-capa.js";
 
 /** @param {import('../NS').NS} ns **/
 export function getNeededThreads(ns, server) {
-  let money = ns.getServerMoneyAvailable(server) * 0.5;
+  let money = ns.getServerMaxMoney(server) * 0.25;
   if (money === 0) money = 1;
   const maxMoney = ns.getServerMaxMoney(server);
   const minSec = ns.getServerMinSecurityLevel(server);
@@ -14,7 +14,7 @@ export function getNeededThreads(ns, server) {
   );
 
   const tweaken = Math.ceil((sec - minSec) * 20);
-  const tweaken2 = Math.ceil(ns.hackAnalyzeSecurity(thack) * 20);
+  const tweaken2 = Math.ceil(tgrow / 12.5);
 
   /* ns.tprint(
     JSON.stringify({ money, maxMoney, minSec, sec, thack, tgrow, tweaken })
@@ -38,7 +38,8 @@ export function launch(ns, capa, threads, action, target, wait_ms) {
       srv.name,
       launchThreads,
       target,
-      wait_ms
+      wait_ms,
+      `rnd-${Math.random()}`
     );
 
     /*ns.tprint(
@@ -116,9 +117,7 @@ export async function main(ns) {
         .reduce((sum, threads) => sum + threads, 0);
       if (otherWeakeners.length == 0 || otherWeakenThreads < tweaken) {
         const launchThreads = Math.min(total, tweaken - otherWeakenThreads);
-        if (
-          launch(ns, capa, launchThreads, "weaken", server, Math.random() * 10)
-        )
+        if (launch(ns, capa, launchThreads, "weaken", server, 0))
           active.push({
             type: "weaken",
             threads: launchThreads,
@@ -145,7 +144,7 @@ export async function main(ns) {
         .reduce((sum, threads) => sum + threads, 0);
       if (otherGrowers.length == 0 || otherGrowThreads < tgrow) {
         const launchThreads = Math.min(total, tgrow - otherGrowThreads);
-        if (launch(ns, capa, launchThreads, "grow", server, Math.random() * 10))
+        if (launch(ns, capa, launchThreads, "grow", server, 0))
           active.push({
             type: "grow",
             threads: launchThreads,
@@ -232,18 +231,20 @@ export async function main(ns) {
       } else {
         ns.print(`free: ${total}, need: ${thack + tweaken + tgrow + tweaken}`);
         // lets just hack things
-        if (launch(ns, capa, thack, "hack", server, Math.random() * 10))
+        /*      const now = Math.random() * 10;
+        if (launch(ns, capa, thack, "hack", server, now))
           active.push({
             type: "hack",
             threads: thack,
             dur: hacktime,
-            start: after(wait_h1),
-            eta: after(wait_h1 + hacktime),
+            start: after(now),
+            eta: after(now + hacktime),
           });
         else ns.print("h failed");
         const update = idle_threads(ns, 1.7);
         capa = update.capa;
         total = update.total;
+      }*/
       }
     }
 
@@ -260,7 +261,7 @@ export async function main(ns) {
         done.length
       },free: ${total}, need: ${thack + tweaken + tgrow + tweaken}`
     );
-    await ns.sleep(20);
+    await ns.sleep(200);
   }
 }
 
