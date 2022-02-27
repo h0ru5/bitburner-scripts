@@ -2,21 +2,25 @@ import { idle_threads } from "neo/get-idle-capa.js";
 
 /** @param {import('../NS').NS} ns **/
 export function getNeededThreads(ns, server) {
-  let money = ns.getServerMoneyAvailable(server);
+  let money = ns.getServerMoneyAvailable(server) * 0.5;
   if (money === 0) money = 1;
   const maxMoney = ns.getServerMaxMoney(server);
   const minSec = ns.getServerMinSecurityLevel(server);
   const sec = ns.getServerSecurityLevel(server);
 
   const thack = Math.ceil(ns.hackAnalyzeThreads(server, money));
-  const tgrow = Math.ceil(ns.growthAnalyze(server, maxMoney / money));
+  const tgrow = Math.ceil(
+    ns.growthAnalyze(server, maxMoney / (maxMoney - money))
+  );
+
   const tweaken = Math.ceil((sec - minSec) * 20);
+  const tweaken2 = Math.ceil(ns.hackAnalyzeSecurity(thack) * 20);
 
   /* ns.tprint(
     JSON.stringify({ money, maxMoney, minSec, sec, thack, tgrow, tweaken })
   ); */
 
-  return { thack, tgrow, tweaken };
+  return { thack, tgrow, tweaken, tweaken2 };
 }
 
 export function after(millis) {
@@ -74,7 +78,7 @@ export async function main(ns) {
   let active = []; //active campaigns
   while (true) {
     const server = flags._[0];
-    const { thack, tgrow, tweaken } = getNeededThreads(ns, server);
+    const { thack, tgrow, tweaken, tweaken2 } = getNeededThreads(ns, server);
 
     const maxMoney = ns.getServerMaxMoney(server);
     let money = ns.getServerMoneyAvailable(server);
@@ -100,11 +104,12 @@ export async function main(ns) {
     ns.print(` hack____: ${ns.tFormat(hacktime)} (t=${thack})`);
     ns.print(` grow____: ${ns.tFormat(growtime)} (t=${tgrow})`);
     ns.print(` weaken__: ${ns.tFormat(weakentime)} (t=${tweaken})`);
+    ns.print(` weaken_2: ${ns.tFormat(weakentime)} (t=${tweaken2})`);
 
     // get idle capa
     let { capa, total } = idle_threads(ns, 1.75);
 
-    if (protection > 5) {
+    if (protection > 1) {
       const otherWeakeners = active.filter((entry) => entry.type == "weaken");
       const otherWeakenThreads = otherWeakeners
         .map((entry) => entry.threads)
@@ -133,7 +138,7 @@ export async function main(ns) {
     }
 
     // prep server money
-    if (money_pct < 90) {
+    if (money_pct < 99) {
       const otherGrowers = active.filter((entry) => entry.type == "grow");
       const otherGrowThreads = otherGrowers
         .map((entry) => entry.threads)
@@ -159,11 +164,11 @@ export async function main(ns) {
     }
 
     // server is ok, launch campaign
-    if (money_pct >= 90 && protection <= 5) {
+    if (money_pct >= 95 && protection <= 2) {
       const buffer = 200; //ms
 
-      //simple case
-      if (total >= thack + tweaken + tgrow + tweaken) {
+      // hwgw
+      if (total >= thack + tweaken2 + tgrow + tweaken) {
         let wait_h1, wait_w1_1, wait_g1, wait_w1_2;
 
         // calc wait times based on longest action
@@ -186,7 +191,7 @@ export async function main(ns) {
         capa = update.capa;
         total = update.total;
 
-        if (launch(ns, capa, tweaken, "weaken", server, wait_w1_2))
+        if (launch(ns, capa, tweaken2, "weaken", server, wait_w1_2))
           active.push({
             type: "weaken",
             threads: tweaken,
@@ -226,6 +231,19 @@ export async function main(ns) {
         total = update.total;
       } else {
         ns.print(`free: ${total}, need: ${thack + tweaken + tgrow + tweaken}`);
+        // lets just hack things
+        if (launch(ns, capa, thack, "hack", server, Math.random() * 10))
+          active.push({
+            type: "hack",
+            threads: thack,
+            dur: hacktime,
+            start: after(wait_h1),
+            eta: after(wait_h1 + hacktime),
+          });
+        else ns.print("h failed");
+        const update = idle_threads(ns, 1.7);
+        capa = update.capa;
+        total = update.total;
       }
     }
 
